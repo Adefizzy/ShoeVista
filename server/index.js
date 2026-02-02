@@ -39,4 +39,15 @@ const startServer = async () => {
 }
 startServer();
 
+app.use((err, req, res, next) => {
+    const status = err?.status || err?.statusCode || 500;
+    const message = err?.message || "Something went wrong";
+    
+    console.error('Error:', err);
+    
+    res.status(status).json({
+        message,
+        ...(process.env.NODE_ENV === 'development' && { stack: err?.stack })
+    });
+});
 
